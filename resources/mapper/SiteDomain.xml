@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SiteMapper">
+	<select id="selectAll" resultType="siteDomain" >
+		select 
+					id,
+					team,
+					part,
+					name,
+					stage_url as stageUrl,
+					real_url as realUrl,					
+					create_date as createDate,
+					description
+		from 		site
+	</select>	
+	
+	<select id="selectSite" parameterType="siteRequest" resultType="siteDomain" >
+		select 
+					id,
+					team,
+					part,
+					name,
+					stage_url as stageUrl,
+					real_url as realUrl,
+					create_date as createDate,
+					description
+		from 		site
+		where		team = #{team}
+		<if test="part != null and part != ''">
+		and		part = #{part}
+		</if>
+		order by team,part, name
+	</select>
+	
+	<select id="selectTeam" resultType="siteDomain" >
+		select 
+					team
+		from 		site
+		group by team
+		order by team
+	</select>	
+	
+	<select id="selectPart" parameterType="siteRequest" resultType="siteDomain" >
+		select 
+					part
+		from 		site
+		where 	team = #{team}
+		group by part
+		order by part
+	</select>	
+	
+	<insert id="insertSite" parameterType="siteRequest" >
+		insert into site (
+			team,
+			part,
+			name,
+			stage_url,
+			real_url,
+			create_date,
+			description
+		) values(
+			#{team},
+			#{part},
+			#{name},
+			#{stageUrl},
+			#{realUrl},
+			now(),
+			#{description}
+		)
+	</insert>
+	
+	<delete id="deleteSite" parameterType="siteRequest" >
+		delete 
+		from 		site
+		where		id = #{id}
+	</delete>
+	
+	<update id="updateSite" parameterType="siteRequest" >
+		update 	site
+		set
+					team = #{team}
+					,part = #{part}
+					,name = #{name}
+					,stage_url = #{stageUrl}
+					,real_url = #{realUrl}
+					,description = #{description}
+		where		id = #{id}
+	</update>
+</mapper>
